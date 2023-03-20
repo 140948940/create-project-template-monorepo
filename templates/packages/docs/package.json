@@ -1,0 +1,18 @@
+{
+  "name": "@project/docs",
+  "version": "0.0.0",
+  "private": true,
+  "scripts": {
+    "docs": "vitepress dev .",
+    "docs:api": "node run-typedoc.js",
+    "docs:build": "vitepress build ."
+  },
+  "dependencies": {
+    "vitepress": "1.0.0-alpha.48",
+    "${template---name}": "workspace:*"
+  },
+  "volta": {
+    "node": "16.5.0",
+    "pnpm": "7.29.1"
+  }
+}

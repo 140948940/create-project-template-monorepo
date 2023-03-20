@@ -1,0 +1,41 @@
+name: page
+
+#在代码push到main分支执行
+on:
+  workflow_dispatch: {}
+  push:
+    paths:
+      - 'packages/docs/**'
+    branches:
+      - main
+jobs:
+  build:
+  #使用ubuntu系统
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - uses: actions/checkout@v3
+      - uses: pnpm/action-setup@v2.2.1
+        with:
+          version: 7.1.7
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '18'
+          cache: 'pnpm'
+        # forks do not have access to secrets so just skip this
+      - run: pnpm install --no-frozen-lockfile
+      - run: pnpm run -r docs:build
+
+
+      - uses: actions/configure-pages@v2
+      - uses: actions/upload-pages-artifact@v1
+        with:
+          path: packages/docs/.vitepress/dist
+      - name: Deploy
+        id: deployment
+        uses: actions/deploy-pages@v1
