@@ -203,10 +203,6 @@ async function main() {
     await runIfNotDry(`pnpm`, ["exec", "prettier", "--write", "CHANGELOG.md"], {
       cwd: pkg.path,
     });
-    // await fs.copyFile(
-    //   resolve(__dirname, "../LICENSE"),
-    //   resolve(pkg.path, "LICENSE")
-    // );
   }
 
   const { yes: isChangelogCorrect } = await prompts({
