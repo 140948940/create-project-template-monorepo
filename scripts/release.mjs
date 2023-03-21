@@ -406,12 +406,12 @@ async function getChangedPackages() {
     );
 
     if (hasChanges) {
-      return {
+      return [{
         path: join(__dirname,'../'),
         name: pkg.name,
         version: pkg.version,
         pkg,
-      };
+      }];
     } else {
       return null;
     }
