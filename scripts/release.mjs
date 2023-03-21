@@ -22,16 +22,12 @@ import semver from "semver";
  * enquirer: 用户友好、直观且易于创建的时尚CLI提示。
  * CLI（command-line interface，命令行界面）是指可在用户提示符下键入可执行指令的界面
  */
-import enquirer from "enquirer";
+import prompts from "prompts";
 
 /* 用于执行外部程序 例如：git */
 import { execa } from "execa";
 // 串联执行promise
 import pSeries from "p-series";
-//
-import { globby } from "globby";
-
-const { prompt } = enquirer;
 const fs = _fs.promises;
 
 const __filename = fileURLToPath(import.meta.url);
@@ -148,7 +144,7 @@ async function main() {
         ...(preId ? ["prepatch", "preminor", "premajor", "prerelease"] : []),
       ];
 
-      const { release } = await prompt({
+      const { release } = await prompts({
         type: "select",
         name: "release",
         message: `Select release type for ${chalk.bold.white(name)}`,
@@ -159,7 +155,7 @@ async function main() {
 
       if (release === "custom") {
         version = (
-          await prompt({
+          await prompts({
             type: "input",
             name: "version",
             message: `Input custom version (${chalk.bold.white(name)})`,
@@ -178,7 +174,7 @@ async function main() {
     })
   );
 
-  const { yes: isReleaseConfirmed } = await prompt({
+  const { yes: isReleaseConfirmed } = await prompts({
     type: "confirm",
     name: "yes",
     message: `Releasing \n${pkgWithVersions
@@ -203,13 +199,13 @@ async function main() {
     await runIfNotDry(`pnpm`, ["exec", "prettier", "--write", "CHANGELOG.md"], {
       cwd: pkg.path,
     });
-    await fs.copyFile(
-      resolve(__dirname, "../LICENSE"),
-      resolve(pkg.path, "LICENSE")
-    );
+    // await fs.copyFile(
+    //   resolve(__dirname, "../LICENSE"),
+    //   resolve(pkg.path, "LICENSE")
+    // );
   }
 
-  const { yes: isChangelogCorrect } = await prompt({
+  const { yes: isChangelogCorrect } = await prompts({
     type: "confirm",
     name: "yes",
     message: "Are the changelogs correct?",
@@ -222,7 +218,6 @@ async function main() {
   step("\nBuilding all packages...");
   if (!skipBuild && !isDryRun) {
     await run("pnpm", ["run", "build"]);
-    await run("pnpm", ["run", "build:dts"]);
   } else {
     console.log(`(skipped)`);
   }
@@ -232,8 +227,7 @@ async function main() {
     step("\nCommitting changes...");
     await runIfNotDry("git", [
       "add",
-      "packages/*/CHANGELOG.md",
-      "packages/*/package.json",
+      ".",
     ]);
     await runIfNotDry("git", [
       "commit",
@@ -250,7 +244,7 @@ async function main() {
   let versionsToPush = [];
   for (const pkg of pkgWithVersions) {
     const tagName =
-      pkg.name === "${template---name}"
+      pkg.name === "create-project-template-monorepo"
         ? `v${pkg.version}`
         : `${pkg.name}@${pkg.version}`;
     versionsToPush.push(`refs/tags/${tagName}`);
@@ -393,7 +387,7 @@ async function getChangedPackages() {
     )
     lastTag = stdout
   }
-  const pkg = JSON.parse(await fs.readFile(join("../", "package.json")));
+  const pkg = JSON.parse(await fs.readFile(join(__dirname,"../", "package.json")));
   // 如果包不是私有包
   if (!pkg.private) {
     const { stdout: hasChanges } = await run(
@@ -404,16 +398,16 @@ async function getChangedPackages() {
         // 
         "--",
         // // apparently {src,package.json} doesn't work
-        join("../templates"),
-        join("../utils"),
-        join("../index.mjs"),
+        join(__dirname,"../templates"),
+        join(__dirname,"../utils"),
+        join(__dirname,"../index.mjs"),
       ],
       { stdio: "pipe" }
     );
 
     if (hasChanges) {
       return {
-        path: '../',
+        path: join(__dirname,'../'),
         name: pkg.name,
         version: pkg.version,
         pkg,
