@@ -416,6 +416,7 @@ async function getChangedPackages() {
       return null;
     }
   }
+  console.log("[pkg]",[pkg])
   return [pkg];
 }
 
