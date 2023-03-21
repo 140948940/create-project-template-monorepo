@@ -28,9 +28,16 @@
     "start": "node index.mjs"
   },
   "lint-staged": {
-    "*.{js,ts,vue,json}": [
+    "*.{js,vue,json}": [
       "prettier --write"
+    ],
+    "*.ts?(x)": [
+      "prettier --parser=typescript --write"
     ]
+  },
+  "gitHooks": {
+    "pre-commit": "lint-staged",
+    "commit-msg": "node scripts/verifyCommit.mjs"
   },
   "author": "A SOUL",
   "license": "MIT",
@@ -65,7 +72,5 @@
     "semver": "^7.3.8",
     "yorkie": "^2.0.0"
   },
-  "dependencies": {
-    
-  }
+  "dependencies": {}
 }
