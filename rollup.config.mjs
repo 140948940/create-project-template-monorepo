@@ -6,7 +6,7 @@ export default {
   input: 'index.mjs',
   output: {
     banner: '#!/usr/bin/env node',
-    file: 'dist/outfile.cjs',
+    file: 'outfile.cjs',
     format: 'cjs',
   },
   plugins: [

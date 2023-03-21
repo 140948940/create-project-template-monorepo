@@ -1,19 +1,19 @@
 {
   "name": "create-project-template-monorepo",
-  "version": "1.0.2",
+  "version": "1.0.4",
   "description": "一键生成monorepo前端项目架构模板",
-  "main": "index.mjs",
+  "main": "outfile.cjs",
   "type": "module",
   "bin": {
-    "create-project-template-monorepo": "./dist/outfile.cjs"
+    "create-project-template-monorepo": "./outfile.cjs"
   },
   "files": [
-    "dist/outfile.cjs",
-    "template"
+    "./outfile.cjs",
+    "templates"
   ],
   "scripts": {
     "create": "create-project-template",
-    "build": "rimraf dist && rollup -c rollup.config.mjs",
+    "build": "rimraf ./outfile.js && rollup -c rollup.config.mjs",
     "dev": "rollup --watch -c rollup.config.mjs",
     "start": "node index.mjs"
   },
@@ -28,6 +28,7 @@
     "@rollup/plugin-terser": "^0.4.0",
     "fs-extra": "^11.1.0",
     "kolorist": "^1.7.0",
+    "minimist": "^1.2.8",
     "prompts": "^2.4.2",
     "rimraf": "^4.4.0",
     "rollup": "^3.20.0"
