@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 
-import * as fs from "node:fs";
-import * as path from "node:path";
+import * as fs from "fs";
+import * as path from "path";
 import prompts from "prompts";
 import { red, green, bold } from "kolorist";
 import {emptyDir} from './utils/emptyDir.mjs'
