@@ -143,20 +143,25 @@ async function main() {
         "major",
         ...(preId ? ["prepatch", "preminor", "premajor", "prerelease"] : []),
       ];
-
+      const choices = versionIncrements
+        .map((i) => ({
+          value: `${i}: ${name} (${semver.inc(version, i, preId)})`,
+          title: `${i}: ${name} (${semver.inc(version, i, preId)})`,
+        }))
+        .concat([{ value: "custom", title: "Custom" }]);
       const { release } = await prompts({
         type: "select",
         name: "release",
         message: `Select release type for ${chalk.bold.white(name)}`,
-        choices: versionIncrements
-          .map((i) => `${i}: ${name} (${semver.inc(version, i, preId)})`)
-          .concat(["custom"]),
+        choices
+        // choices: versionIncrements
+        //   .map((i) => `${i}: ${name} (${semver.inc(version, i, preId)})`)
+        //   .concat(["custom"]),
       });
-
       if (release === "custom") {
         version = (
           await prompts({
-            type: "input",
+            type: "text",
             name: "version",
             message: `Input custom version (${chalk.bold.white(name)})`,
             initial: version,
@@ -165,7 +170,6 @@ async function main() {
       } else {
         version = release.match(/\((.*)\)/)[1];
       }
-
       if (!semver.valid(version)) {
         throw new Error(`invalid target version: ${version}`);
       }
@@ -225,10 +229,7 @@ async function main() {
   const { stdout } = await run("git", ["diff"], { stdio: "pipe" });
   if (stdout) {
     step("\nCommitting changes...");
-    await runIfNotDry("git", [
-      "add",
-      ".",
-    ]);
+    await runIfNotDry("git", ["add", "."]);
     await runIfNotDry("git", [
       "commit",
       "-m",
@@ -370,24 +371,26 @@ async function publishPackage(pkg) {
 //   return pkgs.filter(p => p)
 // }
 async function getChangedPackages() {
-  let lastTag
+  let lastTag;
 
   try {
-    const { stdout } = await run('git', ['describe', '--tags', '--abbrev=0'], {
-      stdio: 'pipe',
-    })
-    lastTag = stdout
+    const { stdout } = await run("git", ["describe", "--tags", "--abbrev=0"], {
+      stdio: "pipe",
+    });
+    lastTag = stdout;
   } catch (error) {
     // maybe there are no tags
-    console.error(`Couldn't get the last tag, using first commit...`)
+    console.error(`Couldn't get the last tag, using first commit...`);
     const { stdout } = await run(
-      'git',
-      ['rev-list', '--max-parents=0', 'HEAD'],
-      { stdio: 'pipe' }
-    )
-    lastTag = stdout
+      "git",
+      ["rev-list", "--max-parents=0", "HEAD"],
+      { stdio: "pipe" }
+    );
+    lastTag = stdout;
   }
-  const pkg = JSON.parse(await fs.readFile(join(__dirname,"../", "package.json")));
+  const pkg = JSON.parse(
+    await fs.readFile(join(__dirname, "../", "package.json"))
+  );
   // 如果包不是私有包
   if (!pkg.private) {
     const { stdout: hasChanges } = await run(
@@ -395,28 +398,30 @@ async function getChangedPackages() {
       [
         "diff",
         lastTag,
-        // 
+        //
         "--",
         // // apparently {src,package.json} doesn't work
-        join(__dirname,"../templates"),
-        join(__dirname,"../utils"),
-        join(__dirname,"../index.mjs"),
+        join(__dirname, "../templates"),
+        join(__dirname, "../utils"),
+        join(__dirname, "../index.mjs"),
       ],
       { stdio: "pipe" }
     );
 
     if (hasChanges) {
-      return [{
-        path: join(__dirname,'../'),
-        name: pkg.name,
-        version: pkg.version,
-        pkg,
-      }];
+      return [
+        {
+          path: join(__dirname, "../"),
+          name: pkg.name,
+          version: pkg.version,
+          pkg,
+        },
+      ];
     } else {
       return null;
     }
   }
-  console.log("[pkg]",[pkg])
+  console.log("[pkg]", [pkg]);
   return [pkg];
 }
 
