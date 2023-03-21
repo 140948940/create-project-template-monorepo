@@ -9,7 +9,8 @@
   },
   "files": [
     "./outfile.cjs",
-    "templates"
+    "templates",
+    "README.md"
   ],
   "keywords": [
     "cli",
@@ -30,6 +31,14 @@
   "volta": {
     "node": "18.15.0"
   },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/140948940/create-project-template-monorepo.git"
+  },
+  "bugs": {
+    "url": "https://github.com/140948940/create-project-template-monorepo/issues"
+  },
+  "homepage": "https://github.com/140948940/create-project-template-monorepo#readme",
   "devDependencies": {
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
