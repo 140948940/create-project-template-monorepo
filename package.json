@@ -1,6 +1,6 @@
 {
   "name": "create-project-template-monorepo",
-  "version": "1.0.5",
+  "version": "1.0.6",
   "description": "一键生成monorepo前端项目架构模板",
   "main": "outfile.cjs",
   "type": "module",
