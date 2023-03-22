@@ -4,6 +4,9 @@
   "description": "一键生成monorepo前端项目架构模板",
   "main": "outfile.cjs",
   "type": "module",
+  "engines": {
+    "node": "^14.18.0 || >=16.0.0"
+  },
   "bin": {
     "create-project-template-monorepo": "./outfile.cjs"
   },
@@ -52,11 +55,15 @@
   },
   "homepage": "https://github.com/140948940/create-project-template-monorepo#readme",
   "devDependencies": {
+    "@babel/plugin-transform-runtime": "^7.21.0",
+    "@babel/preset-env": "^7.20.2",
+    "@rollup/plugin-babel": "^6.0.3",
     "@rollup/plugin-commonjs": "^24.0.1",
     "@rollup/plugin-node-resolve": "^15.0.1",
     "@rollup/plugin-terser": "^0.4.0",
     "chalk": "^5.2.0",
     "conventional-changelog-cli": "^2.2.2",
+    "core-js": "^3.29.1",
     "execa": "^7.1.1",
     "fs-extra": "^11.1.0",
     "husky": "^8.0.3",
@@ -70,6 +77,5 @@
     "rollup": "^3.20.0",
     "semver": "^7.3.8",
     "yorkie": "^2.0.0"
-  },
-  "dependencies": {}
+  }
 }

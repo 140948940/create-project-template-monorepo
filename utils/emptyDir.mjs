@@ -1,5 +1,5 @@
 import { postOrderDirectoryTraverse, preOrderDirectoryTraverse } from './directoryTraverse.mjs'
-import { promises as fs } from 'fs'
+import   fs  from 'fs'
 export function emptyDir(dir) {
     if (!fs.existsSync(dir)) {
       return

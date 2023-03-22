@@ -41,7 +41,6 @@ async function copyDir(source, destination) {
   
       //   throw err;
       // });
-      console.log('hhhh')
       await copyDir(sourceFolderPath, destinationFolderPath)
       await replaceTextInDirAndFiles(destinationFolderPath,'${template---name}',replacementText)
     } catch (err) {

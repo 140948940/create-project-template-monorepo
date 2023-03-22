@@ -82,12 +82,14 @@ export async function renameDirsInDir(dir, oldText, newText, option) {
         ) {
           continue;
         }
+        console.log("file",file,typeof(file))
+        console.log(file.replaceAll)
         // 如果是目录，重命名目录
         const newFilePath = join(dir, file.replaceAll(oldText, newText));
         await fs.rename(oldFilePath, newFilePath);
         console.log(`Replaced Dir: ${oldFilePath} ==> ${newFilePath}`);
-        // 递归处理子目录
-        await renameDirsInDir(oldFilePath, oldText, newText, option);
+        // 递归处理子目录  处理的路径应该是新的路径
+        await renameDirsInDir(newFilePath, oldText, newText, option);
       }
     }
   } catch (err) {
